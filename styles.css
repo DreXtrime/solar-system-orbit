@@ -1,5 +1,6 @@
 :root {
   --glass-color: 100, 100, 120;
+  background: black;
 }
 
 .hidden {
@@ -43,4 +44,15 @@
 #speed-label {
   width: 40px;
   display: inline-block;
+}
+
+#planet-panel {
+  position: fixed;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  width: 260px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 16px;
 }

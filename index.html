@@ -31,5 +31,26 @@
             />
             <span id="speed-label">1x</span>
         </div>
+        <!--  Planet Panel  -->
+        <div id="planet-panel" class="glass-panel">
+          <!-- List View -->
+          <div id="list-view">
+            <h2>Planets</h2>
+            <ul id="planet-list"></ul>
+            <button id="btn-add-planet">Add Planet</button>
+          </div>
+          <!-- Edit View -->
+          <div id="edit-view" class="hidden">
+            <button id="btn-back">← Back</button>
+            <h2 id="edit-title">Edit Planet</h2>
+            <label>Name <input type="text" id="edit-name" /></label>
+            <label>Size <input type="range" id="edit-size" min="0.1" max="20" step="0.1" /></label>
+            <label>Color <input type="color" id="edit-color" /></label>
+            <label>Orbit Distance <input type="range" id="edit-distance" min="0.1" max="50" step="0.1" /></label>
+            <label>Year Duration <input type="range" id="edit-year" min="0.1" max="300" step="0.1" /></label>
+            <button id="btn-save">Save</button>
+            <button id="btn-delete">Delete</button>
+          </div>
+        </div>
     </body>
 </html>

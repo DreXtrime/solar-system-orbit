@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Planet from "./bodies.js";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import * as UI from "./ui.js";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -17,6 +18,17 @@ const tooltipDistance = document.getElementById('tooltip-distance');
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+function handleResize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+window.addEventListener('resize', handleResize);
+
 document.body.appendChild(renderer.domElement);
 
 const planets = [
@@ -50,10 +62,12 @@ window.addEventListener('mousemove', (event) => {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
 
     raycaster.setFromCamera(mouse, camera)
-    const intersects = raycaster.intersectObjects(planets.map(p => p.mesh))
+    const meshes = planets.map(p => p.mesh)
+    const orbits = planets.filter(p => p.orbitRing).map(p => p.orbitRing)
+    const intersects = raycaster.intersectObjects([...meshes, ...orbits])
 
     const planet = intersects.length > 0
-        ? planets.find(p => p.mesh === intersects[0].object)
+        ? planets.find(p => p.mesh === intersects[0].object || p.orbitRing === intersects[0].object)
         : null
 
     if (planet === null) {
@@ -79,6 +93,14 @@ camera.position.set( 0, 10, 10 );
 
 let simulationSpeed = 0.3;
 let paused = false;
+
+UI.renderPlanetList(planets, (planet) => {
+    UI.showEditView(planet)
+})
+
+document.getElementById('btn-add-planet').addEventListener('click', () => {
+    UI.showEditView(null)
+})
 
 document.getElementById('btn-playpause').addEventListener('click', () => {
   paused = !paused
