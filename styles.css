@@ -1,15 +1,46 @@
+:root {
+  --glass-color: 100, 100, 120;
+}
+
 .hidden {
   display: none !important;
 }
 
 #tooltip {
   position: absolute;
-  background-color: #333;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 4px;
   font-size: 14px;
-  pointer-events: none; /* Prevents the box from flickering under the cursor */
-  white-space: nowrap; /* Keeps the text on a single line */
-  z-index: 1000;       /* Keeps it on top of other elements */
+  backdrop-filter: blur(50px);
+  background: rgba(var(--glass-color), 0.4);
+  padding: 5px 5px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+#tooltip p {
+  margin: 0;
+}
+
+.glass-panel {
+  background: rgba(var(--glass-color), 0.1);
+  backdrop-filter: blur(100px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+}
+
+#controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#speed-label {
+  width: 40px;
+  display: inline-block;
 }

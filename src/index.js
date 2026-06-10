@@ -10,26 +10,33 @@ const camera = new THREE.PerspectiveCamera(
     1000,
 );
 
+const tooltip = document.getElementById('tooltip');
+const tooltipName = document.getElementById('tooltip-name');
+const tooltipSize = document.getElementById('tooltip-size');
+const tooltipDistance = document.getElementById('tooltip-distance');
+
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const planets = [
-    new Planet("Sun", 1.5, 0xf6d821, 0, 0, 0.02, true),
-    new Planet("Mercury", 0.15, 0xaaaaaa, 2, 0.24, 0.004),
-    new Planet("Venus",   0.35, 0xffaa33, 3, 0.62, 0.002),
-    new Planet("Earth",   0.38, 0x2233ff, 4, 1.00, 0.02),
-    new Planet("Mars",    0.25, 0xcc5533, 5, 1.88, 0.018),
-    new Planet("Jupiter", 0.90, 0xd9b38c, 8, 11.86, 0.04),
-    new Planet("Saturn",  0.80, 0xe6d28c, 11, 29.46, 0.035),
-    new Planet("Uranus",  0.60, 0x99ddff, 14, 84.01, 0.025),
-    new Planet("Neptune", 0.58, 0x3366ff, 17, 164.8, 0.025),
-    new Planet("Pluto",   0.08, 0xc8b8a8, 21, 248.0, 0.01),
+    new Planet("Sun", 109.1, 0xf6d821, 0, 0, 0.02, true),
+
+    new Planet("Mercury", 0.383, 0xaaaaaa, 0.387, 0.240846, 0.004),
+    new Planet("Venus",   0.949, 0xffaa33, 0.723, 0.615198, 0.002),
+    new Planet("Earth",   1.0, 0x2233ff, 1.00, 1.0, 0.02),
+    new Planet("Mars",    0.532, 0xcc5533, 1.52, 1.8808, 0.018),
+
+    new Planet("Jupiter", 10.97, 0xd9b38c, 5.20, 11.862, 0.04),
+    new Planet("Saturn",  9.14, 0xe6d28c, 9.58, 29.457, 0.035),
+    new Planet("Uranus",  3.98, 0x99ddff, 19.2, 84.017, 0.025),
+    new Planet("Neptune", 3.86, 0x3366ff, 30.05, 164.79, 0.025),
+    new Planet("Pluto",   0.187, 0xc8b8a8, 39.5, 248.0, 0.01),
 ];
 
 planets.forEach(planet => {
-    planet.mesh = planet.createPlanet(planet.radius, planet.color);
-    planet.orbitRing = planet.createOrbit(planet.orbitRadius);
+    planet.mesh = planet.createPlanet(planet.scaledRadius, planet.color);
+    planet.orbitRing = planet.createOrbit(planet.orbitScaledRadius);
     scene.add(planet.mesh)
     scene.add(planet.orbitRing)
 });
@@ -37,7 +44,6 @@ planets.forEach(planet => {
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 
-const tooltip = document.getElementById('tooltip');
 
 window.addEventListener('mousemove', (event) => {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1
@@ -58,26 +64,43 @@ window.addEventListener('mousemove', (event) => {
         const offsetX = 15;
         const offsetY = 15;
 
-        tooltip.textContent = planet.name;
+        tooltipName.textContent = planet.name;
+        tooltipSize.textContent = `Size: ${planet.radius} Earths`;
+        tooltipDistance.textContent = `Distance: ${planet.orbitRadius} AU`;
         tooltip.style.left = (event.clientX + offsetX) + 'px';
         tooltip.style.top = (event.clientY + offsetY) + 'px';
     }
-    console.log(planet?.name)
 })
 
-camera.lookAt(0, 0, 0);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enablePan = false
+camera.lookAt(0, 0, 0);
 camera.position.set( 0, 10, 10 );
+
+let simulationSpeed = 0.3;
+let paused = false;
+
+document.getElementById('btn-playpause').addEventListener('click', () => {
+  paused = !paused
+  document.getElementById('btn-playpause').textContent = paused ? 'Play' : 'Pause'
+})
+
+document.getElementById('speed-slider').addEventListener('input', (e) => {
+  simulationSpeed = parseFloat(e.target.value)
+  document.getElementById('speed-label').textContent = `${simulationSpeed}x`
+})
 
 function animate(time) {
     controls.update();
-    planets.forEach(planet => {
-        if (planet.isStar) return;
-        planet.angle += 0.01 / planet.yearDuration;
-        planet.mesh.position.x = Math.cos(planet.angle) * planet.orbitRadius;
-        planet.mesh.position.z = Math.sin(planet.angle) * planet.orbitRadius;
-    });
+    if (!paused) {
+        planets.forEach(planet => {
+            if (paused) return;
+            if (planet.isStar) return;
+            planet.angle += 0.01 * simulationSpeed / planet.yearDuration;
+            planet.mesh.position.x = Math.cos(planet.angle) * planet.orbitScaledRadius;
+            planet.mesh.position.z = Math.sin(planet.angle) * planet.orbitScaledRadius;
+        });
+    }
     renderer.render(scene, camera);
 }
 
