@@ -32,13 +32,11 @@ window.addEventListener('resize', handleResize);
 document.body.appendChild(renderer.domElement);
 
 const planets = [
-    new Planet("Sun", 109.1, 0xf6d821, 0, 0, 0.02, true),
-
+    new Planet("Sun", 109.1, 0xf6d821, 0, 0.1, 0.02, true),
     new Planet("Mercury", 0.383, 0xaaaaaa, 0.387, 0.240846, 0.004),
     new Planet("Venus",   0.949, 0xffaa33, 0.723, 0.615198, 0.002),
     new Planet("Earth",   1.0, 0x2233ff, 1.00, 1.0, 0.02),
     new Planet("Mars",    0.532, 0xcc5533, 1.52, 1.8808, 0.018),
-
     new Planet("Jupiter", 10.97, 0xd9b38c, 5.20, 11.862, 0.04),
     new Planet("Saturn",  9.14, 0xe6d28c, 9.58, 29.457, 0.035),
     new Planet("Uranus",  3.98, 0x99ddff, 19.2, 84.017, 0.025),
@@ -47,11 +45,46 @@ const planets = [
 ];
 
 planets.forEach(planet => {
-    planet.mesh = planet.createPlanet(planet.scaledRadius, planet.color);
-    planet.orbitRing = planet.createOrbit(planet.orbitScaledRadius);
+    planet.create();
     scene.add(planet.mesh)
-    scene.add(planet.orbitRing)
+    if (planet.orbitRing) scene.add(planet.orbitRing)
 });
+
+function savePlanet(values, existingPlanet) {
+    console.log(values.yearDuration)
+    if (existingPlanet) {
+        scene.remove(existingPlanet.mesh);
+        scene.remove(existingPlanet.orbitRing);
+
+        existingPlanet.name = values.name;
+        existingPlanet.radius = values.radius;
+        existingPlanet.color = values.color;
+        existingPlanet.orbitRadius = values.orbitRadius;
+        existingPlanet.yearDuration = values.yearDuration;
+        existingPlanet.rotationSpeed = values.rotationSpeed;
+
+        existingPlanet.update(values);
+        existingPlanet.create();
+        scene.add(existingPlanet.mesh);
+        if (existingPlanet.orbitRing) scene.add(existingPlanet.orbitRing);
+    } else {
+        const newPlanet = new Planet(
+            values.name,
+            values.radius,
+            values.color,
+            values.orbitRadius,
+            values.yearDuration,
+            values.rotationSpeed,
+            values.isStar,
+        );
+        newPlanet.create();
+        scene.add(newPlanet.mesh);
+        scene.add(newPlanet.orbitRing);
+        planets.push(newPlanet);
+    }
+    UI.renderPlanetList(planets, (planet) => UI.showEditView(planet))
+}
+
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
@@ -98,25 +131,15 @@ UI.renderPlanetList(planets, (planet) => {
     UI.showEditView(planet)
 })
 
-document.getElementById('btn-add-planet').addEventListener('click', () => {
-    UI.showEditView(null)
-})
-
-document.getElementById('btn-playpause').addEventListener('click', () => {
-  paused = !paused
-  document.getElementById('btn-playpause').textContent = paused ? 'Play' : 'Pause'
-})
-
-document.getElementById('speed-slider').addEventListener('input', (e) => {
-  simulationSpeed = parseFloat(e.target.value)
-  document.getElementById('speed-label').textContent = `${simulationSpeed}x`
-})
+UI.initUI(planets, {
+    onSave: (values, planet) => { savePlanet(values, planet) },
+    onDelete: (planet) => { },
+});
 
 function animate(time) {
     controls.update();
     if (!paused) {
         planets.forEach(planet => {
-            if (paused) return;
             if (planet.isStar) return;
             planet.angle += 0.01 * simulationSpeed / planet.yearDuration;
             planet.mesh.position.x = Math.cos(planet.angle) * planet.orbitScaledRadius;

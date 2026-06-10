@@ -60,18 +60,26 @@ export default class Planet {
         return new THREE.Mesh(geometry, material);
     }
 
+    update(values) {
+        this.name = values.name
+        this.radius = values.radius
+        this.color = values.color
+        this.orbitRadius = values.orbitRadius
+        this.orbitScaledRadius = this.#scaleOrbit()
+        this.yearDuration = values.yearDuration
+        this.scaledRadius = this.#scaleRadius()
+    }
+
     #scaleRadius() {
         const scaled = Math.pow(this.radius, 0.55);
         const min = 0.2;
-        const max = this.isStar
-            ? MAX_SUN_RADIUS
-            : MAX_RADIUS
+        const max = this.isStar ? MAX_SUN_RADIUS : MAX_RADIUS;
         return Math.min(max, Math.max(min, scaled));
     }
 
     #scaleOrbit() {
-        const scaled = Math.log(this.orbitRadius + 1) * 15.0
-        return Math.max(5.0, scaled)
+        const scaled = Math.log(this.orbitRadius + 1) * 15.0;
+        return Math.max(5.0, scaled);
     }
 
     getRealDiameter() {
