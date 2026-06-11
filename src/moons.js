@@ -19,13 +19,14 @@ export default class Moon {
     }
 
     createMesh() {
-        const geometry = new THREE.SphereGeometry(this.radius, 32, 32)
-        const material = this.texture
-            ? new THREE.MeshStandardMaterial({
-                map: new THREE.TextureLoader().load(`/textures/${this.texture}`),
-                color: this.color
-            })
-            : new THREE.MeshStandardMaterial({ color: this.color })
+        const geometry = new THREE.SphereGeometry(this.radius)
+        if (this.texture && !this._textureCache) {
+            this._textureCache = new THREE.TextureLoader().load(`/textures/${this.texture}`)
+        }
+        const material = new THREE.MeshStandardMaterial({
+            map: this.texture ? this._textureCache : null,
+            color: this.color
+        })
         return new THREE.Mesh(geometry, material)
     }
 

@@ -70,14 +70,15 @@ export default class Planet {
     }
 
     createPlanet() {
-        const geometry = new THREE.SphereGeometry(this.scaledRadius);
-        const material = this.texture
-            ? new THREE.MeshStandardMaterial({
-                map: new THREE.TextureLoader().load(`/textures/${this.texture}`),
-                color: this.color
-            })
-            : new THREE.MeshStandardMaterial({ color: this.color });
-        return new THREE.Mesh(geometry, material);
+        const geometry = new THREE.SphereGeometry(this.scaledRadius)
+        if (this.texture && !this._textureCache) {
+            this._textureCache = new THREE.TextureLoader().load(`/textures/${this.texture}`)
+        }
+        const material = new THREE.MeshStandardMaterial({
+            map: this.texture ? this._textureCache : null,
+            color: this.color
+        })
+        return new THREE.Mesh(geometry, material)
     }
 
     createStar() {
@@ -89,8 +90,8 @@ export default class Planet {
     }
 
     createRing() {
-        const innerRadius = this.scaledRadius * 1.4
-        const outerRadius = this.scaledRadius * 2.4
+        const innerRadius = this.scaledRadius * 1.0
+        const outerRadius = this.scaledRadius * 2.2
         const geometry = new THREE.RingGeometry(innerRadius, outerRadius, 64)
         const pos = geometry.attributes.position
         const uv = geometry.attributes.uv

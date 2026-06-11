@@ -1,3 +1,5 @@
+import { setPreviewPlanet } from "./preview";
+
 let currentPlanet = null;
 let currentMoon = null
 let currentMoonPlanet = null
@@ -28,7 +30,7 @@ export function initUI(planets, callbacks) {
     })
     // Moon Edit View
     document.getElementById('btn-moon-back').addEventListener('click', () => {
-        showEditView(currentMoonPlanet)
+        showEditView(currentMoonPlanet, false)
     })
     document.getElementById('btn-moon-delete').addEventListener('click', () => {
         callbacks.onMoonDelete(currentMoon, currentMoonPlanet)
@@ -46,6 +48,10 @@ export function initUI(planets, callbacks) {
         const hasName = document.getElementById('moon-edit-name').value.trim().length > 0
         document.getElementById('extra-moon-fields').classList.toggle('hidden', !hasName)
     })
+    // Info panel
+    document.getElementById('btn-close-info').addEventListener('click', () => {
+        document.getElementById('info-panel').classList.remove('visible');
+    });
 }
 
 export function renderPlanetList(planets, onSelect) {
@@ -74,6 +80,7 @@ export function renderMoonList(planet, onSelect) {
 export function showListView() {
     isPopulating = true
     currentPlanet = null
+    setPreviewPlanet(null)
     document.getElementById('edit-view').classList.add('hidden')
     document.getElementById('list-view').classList.remove('hidden')
     isPopulating = false
@@ -103,7 +110,7 @@ export function getCurrentMoonPlanet() {
     return currentMoonPlanet
 }
 
-export function showEditView(planet) {
+export function showEditView(planet, updatePreview = true) {
     document.getElementById('moon-edit-view').classList.add('hidden')
     currentPlanet = planet;
     const isStar = planet?.isStar
@@ -121,7 +128,39 @@ export function showEditView(planet) {
     document.getElementById('label-distance').classList.toggle('hidden', isStar)
     document.getElementById('edit-year').value = isNew ? 1 : planet.yearDuration
     document.getElementById('edit-year').parentElement.classList.toggle('hidden', isStar)
+    if (updatePreview) setPreviewPlanet(planet)
     if (!isNew) renderMoonList(planet, (moon) => showMoonEditView(moon, planet))
+}
+
+export function showInfoPanel(planetName, data) {
+    if (!data) return;
+
+    document.getElementById('planet-image').src = data.image;
+    document.getElementById('planet-title').textContent = planetName;
+    document.getElementById('planet-description').textContent = data.description;
+
+    const statsList = document.getElementById('planet-stats');
+    statsList.innerHTML = '';
+    data.stats.forEach(stat => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div>
+                <div class="stat-label">${stat.label}</div>
+                <div class="stat-value">${stat.value}</div>
+            </div>
+            <div class="stat-comparison">${stat.comparison}</div>
+        `;
+        statsList.appendChild(li);
+    });
+    const factsList = document.getElementById('planet-facts');
+    factsList.innerHTML = '';
+    data.facts.forEach(fact => {
+        const li = document.createElement('li');
+        li.textContent = fact;
+        factsList.appendChild(li);
+    });
+
+    document.getElementById('info-panel').classList.add('visible');
 }
 
 export function getCurrentPlanet() {
