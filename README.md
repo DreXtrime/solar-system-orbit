@@ -31,7 +31,7 @@ Includes entries for all 8 planets, plus Pluto and the Sun.
 |--------|---------|
 | Orbit camera | Click and drag |
 | Zoom | Scroll wheel |
-| Focus on planet | Click a planet |
+| Focus on planet | Click a planet or ring |
 | Simulation speed | Bottom slider |
 | Pause / Play | Bottom button |
 
@@ -78,6 +78,11 @@ Thank you to [kood//](https://kood.tech/en/) and [Zone](https://www.zone.eu) for
 
 ### Local Deployment
 
+First clone the project
+```bash
+git clone https://github.com/DreXtrime/solar-system-orbit.git
+cd solar-system-orbit
+```
 Run local
 ```bash
 npm install
@@ -90,7 +95,7 @@ The url will be printed in the terminal.
 
 ```bash
 npm install
-npm run build
+npm run build    //ignore any warnings
 npm start
 ```
 The url will be printed in the terminal.
