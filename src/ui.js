@@ -5,54 +5,88 @@ let currentMoon = null;
 let currentMoonPlanet = null;
 let isPopulating = false;
 
+const dom = {
+    editView: document.getElementById('edit-view'),
+    editSize: document.getElementById('edit-size'),
+    editColor: document.getElementById('edit-color'),
+    editTitle: document.getElementById('edit-title'),
+    editDistance: document.getElementById('edit-distance'),
+    editName: document.getElementById('edit-name'),
+    editYear: document.getElementById('edit-year'),
+    listView: document.getElementById('list-view'),
+    planetList: document.getElementById('planet-list'),
+    planetStats: document.getElementById('planet-stats'),
+    planetFacts: document.getElementById('planet-facts'),
+    planetImage: document.getElementById('planet-image'),
+    planetTitle: document.getElementById('planet-title'),
+    planetDescription: document.getElementById('planet-description'),
+    extraPlanetFields: document.getElementById('extra-planet-fields'),
+    extraMoonFields: document.getElementById('extra-moon-fields'),
+    moonEditName: document.getElementById('moon-edit-name'),
+    moonEditView: document.getElementById('moon-edit-view'),
+    moonEditTitle: document.getElementById('moon-edit-title'),
+    moonEditColor: document.getElementById('moon-edit-color'),
+    moonEditDistance: document.getElementById('moon-edit-distance'),
+    moonEditSpeed: document.getElementById('moon-edit-speed'),
+    moonSection: document.getElementById('moon-section'),
+    moonList: document.getElementById('moon-list'),
+    btnMoonDelete: document.getElementById('btn-moon-delete'),
+    btnDelete: document.getElementById('btn-delete'),
+    btnCloseInfo: document.getElementById('btn-close-info'),
+    btnAddMoon: document.getElementById('btn-add-moon'),
+    btnAddPlanet: document.getElementById('btn-add-planet'),
+    btnMoonBack: document.getElementById('btn-moon-back'),
+    btnBack: document.getElementById('btn-back'),
+    infoPanel: document.getElementById('info-panel'),
+    labelDistance: document.getElementById('label-distance'),
+    moonEditSize: document.getElementById('moon-edit-size'),
+};
+
 export function initUI(planets, callbacks) {
     // Planet Edit View
-    document.getElementById('btn-add-planet').addEventListener('click', () => {
+    dom.btnAddPlanet.addEventListener('click', () => {
         showEditView(null);
     });
-    document.getElementById('btn-back').addEventListener('click', () => {
+    dom.btnBack.addEventListener('click', () => {
         callbacks.onBack();
         showListView();
     });
-    document.getElementById('btn-delete').addEventListener('click', () => {
+    dom.btnDelete.addEventListener('click', () => {
         callbacks.onDelete(currentPlanet);
     });
     const inputs = [
-        'edit-name',
-        'edit-size',
-        'edit-color',
-        'edit-distance',
-        'edit-year',
+        dom.editName,
+        dom.editSize,
+        dom.editColor,
+        dom.editDistance,
+        dom.editYear,
     ];
-    inputs.forEach((id) => {
-        document.getElementById(id).addEventListener('input', () => {
+    inputs.forEach((i) => {
+        i.addEventListener('input', () => {
             if (isPopulating) return;
             callbacks.onSave(getFormValues(), currentPlanet);
         });
     });
-    document.getElementById('edit-name').addEventListener('input', () => {
-        const hasName =
-            document.getElementById('edit-name').value.trim().length > 0;
-        document
-            .getElementById('extra-planet-fields')
-            .classList.toggle('hidden', !hasName);
+    dom.editName.addEventListener('input', () => {
+        const hasName = dom.editName.value.trim().length > 0;
+        dom.extraPlanetFields.classList.toggle('hidden', !hasName);
     });
     // Moon Edit View
-    document.getElementById('btn-moon-back').addEventListener('click', () => {
+    dom.btnMoonBack.addEventListener('click', () => {
         showEditView(currentMoonPlanet, false);
     });
-    document.getElementById('btn-moon-delete').addEventListener('click', () => {
+    dom.btnMoonDelete.addEventListener('click', () => {
         callbacks.onMoonDelete(currentMoon, currentMoonPlanet);
     });
     const moonInputs = [
-        'moon-edit-name',
-        'moon-edit-size',
-        'moon-edit-color',
-        'moon-edit-distance',
-        'moon-edit-speed',
+        dom.moonEditName,
+        dom.moonEditSize,
+        dom.moonEditColor,
+        dom.moonEditDistance,
+        dom.moonEditSpeed,
     ];
-    moonInputs.forEach((id) => {
-        document.getElementById(id).addEventListener('input', () => {
+    moonInputs.forEach((i) => {
+        i.addEventListener('input', () => {
             callbacks.onMoonSave(
                 getMoonFormValues(),
                 currentMoon,
@@ -60,24 +94,21 @@ export function initUI(planets, callbacks) {
             );
         });
     });
-    document.getElementById('btn-add-moon').addEventListener('click', () => {
+    dom.btnAddMoon.addEventListener('click', () => {
         showMoonEditView(null, currentPlanet);
     });
-    document.getElementById('moon-edit-name').addEventListener('input', () => {
-        const hasName =
-            document.getElementById('moon-edit-name').value.trim().length > 0;
-        document
-            .getElementById('extra-moon-fields')
-            .classList.toggle('hidden', !hasName);
+    dom.moonEditName.addEventListener('input', () => {
+        const hasName = dom.moonEditName.value.trim().length > 0;
+        dom.extraMoonFields.classList.toggle('hidden', !hasName);
     });
     // Info panel
-    document.getElementById('btn-close-info').addEventListener('click', () => {
-        document.getElementById('info-panel').classList.remove('visible');
+    dom.btnCloseInfo.addEventListener('click', () => {
+        dom.infoPanel.classList.remove('visible');
     });
 }
 
 export function renderPlanetList(planets, onSelect) {
-    const list = document.getElementById('planet-list');
+    const list = dom.planetList;
     list.innerHTML = '';
     planets.forEach((planet) => {
         const li = document.createElement('li');
@@ -88,7 +119,7 @@ export function renderPlanetList(planets, onSelect) {
 }
 
 export function renderMoonList(planet, onSelect) {
-    const list = document.getElementById('moon-list');
+    const list = dom.moonList;
     list.innerHTML = '';
     planet.moons.forEach((moon) => {
         const li = document.createElement('li');
@@ -96,17 +127,14 @@ export function renderMoonList(planet, onSelect) {
         li.addEventListener('click', () => onSelect(moon));
         list.appendChild(li);
     });
-    document
-        .getElementById('moon-section')
-        .classList.toggle('hidden', planet.isStar);
+    dom.moonSection.classList.toggle('hidden', planet.isStar);
 }
 
 export function showListView() {
-    isPopulating = true;
     currentPlanet = null;
     setPreviewPlanet(null);
-    document.getElementById('edit-view').classList.add('hidden');
-    document.getElementById('list-view').classList.remove('hidden');
+    dom.editView.classList.add('hidden');
+    dom.listView.classList.remove('hidden');
     isPopulating = false;
 }
 
@@ -114,28 +142,18 @@ export function showMoonEditView(moon, planet) {
     currentMoon = moon;
     currentMoonPlanet = planet;
     const isNew = moon === null;
-    document
-        .getElementById('extra-moon-fields')
-        .classList.toggle('hidden', isNew);
-    document.getElementById('edit-view').classList.add('hidden');
-    document.getElementById('moon-edit-view').classList.remove('hidden');
-    document.getElementById('moon-edit-title').textContent = isNew
-        ? 'Add Moon'
-        : 'Edit Moon';
-    document
-        .getElementById('btn-moon-delete')
-        .classList.toggle('hidden', isNew);
-    document.getElementById('moon-edit-name').value = isNew ? '' : moon.name;
-    document.getElementById('moon-edit-size').value = isNew ? 0.1 : moon.radius;
-    document.getElementById('moon-edit-color').value = isNew
+    dom.extraMoonFields.classList.toggle('hidden', isNew);
+    dom.editView.classList.add('hidden');
+    dom.moonEditView.classList.remove('hidden');
+    dom.moonEditTitle.textContent = isNew ? 'Add Moon' : 'Edit Moon';
+    dom.btnMoonDelete.classList.toggle('hidden', isNew);
+    dom.moonEditName.value = isNew ? '' : moon.name;
+    dom.moonEditSize.value = isNew ? 0.1 : moon.radius;
+    dom.moonEditColor.value = isNew
         ? '#ffffff'
         : '#' + moon.color.toString(16).padStart(6, '0');
-    document.getElementById('moon-edit-distance').value = isNew
-        ? 2
-        : moon.orbitRadius;
-    document.getElementById('moon-edit-speed').value = isNew
-        ? 0.5
-        : moon.orbitSpeed;
+    dom.moonEditDistance.value = isNew ? 2 : moon.orbitRadius;
+    dom.moonEditSpeed.value = isNew ? 0.5 : moon.orbitSpeed;
 }
 
 export function getCurrentMoon() {
@@ -147,55 +165,52 @@ export function getCurrentMoonPlanet() {
 }
 
 export function showEditView(planet, updatePreview = true) {
-    document.getElementById('moon-edit-view').classList.add('hidden');
+    dom.moonEditView.classList.add('hidden');
+    dom.listView.classList.add('hidden');
+    dom.editView.classList.remove('hidden');
     currentPlanet = planet;
-    const isStar = planet?.isStar;
     const isNew = planet === null;
-    document
-        .getElementById('extra-planet-fields')
-        .classList.toggle('hidden', isNew);
-    document.getElementById('list-view').classList.add('hidden');
-    document.getElementById('edit-view').classList.remove('hidden');
-    document.getElementById('edit-title').textContent = isNew
-        ? 'Add Planet'
-        : 'Edit Planet';
-    document
-        .getElementById('btn-delete')
-        .classList.toggle('hidden', isStar || isNew);
-    document.getElementById('edit-name').value = isNew ? '' : planet.name;
-    document.getElementById('edit-size').value = isNew ? 1 : planet.radius;
-    document
-        .getElementById('edit-size')
-        .parentElement.classList.toggle('hidden', isStar);
-    document.getElementById('edit-color').value = isNew
-        ? '#ffffff'
-        : '#' + planet.color.toString(16).padStart(6, '0');
-    document.getElementById('edit-distance').value = isNew
-        ? 5
-        : planet.orbitRadius;
-    document
-        .getElementById('label-distance')
-        .classList.toggle('hidden', isStar);
-    document.getElementById('edit-year').value = isNew
-        ? 1
-        : planet.yearDuration;
-    document
-        .getElementById('edit-year')
-        .parentElement.classList.toggle('hidden', isStar);
+    const isStar = planet?.isStar;
+    dom.editName.parentElement.classList.remove('hidden');
+    dom.editName.parentElement.classList.toggle('hidden', !!isStar);
+    dom.extraPlanetFields.classList.toggle('hidden', isNew || isStar);
+    dom.editTitle.textContent = isNew ? 'Add Planet' : 'Edit Planet';
+    dom.btnDelete.classList.toggle('hidden', isStar || isNew);
+    if (isNew) resetPlanetForm();
+    else populatePlanetForm(planet);
     if (updatePreview) setPreviewPlanet(planet);
     if (!isNew)
         renderMoonList(planet, (moon) => showMoonEditView(moon, planet));
 }
 
+function populatePlanetForm(planet) {
+    const isStar = planet?.isStar;
+    dom.editName.value = planet.name;
+    dom.editSize.value = planet.radius;
+    dom.editColor.value = '#' + planet.color.toString(16).padStart(6, '0');
+    dom.editDistance.value = planet.orbitRadius;
+    dom.editYear.value = planet.yearDuration;
+    dom.editSize.parentElement.classList.toggle('hidden', isStar);
+    dom.labelDistance.classList.toggle('hidden', isStar);
+    dom.editYear.parentElement.classList.toggle('hidden', isStar);
+}
+
+function resetPlanetForm() {
+    dom.editName.value = '';
+    dom.editSize.value = 1;
+    dom.editColor.value = '#ffffff';
+    dom.editDistance.value = 5;
+    dom.editYear.value = 1;
+}
+
 export function showInfoPanel(planetName, data) {
     if (!data) return;
 
-    document.getElementById('planet-image').src = data.image;
-    document.getElementById('planet-title').textContent = planetName;
-    document.getElementById('planet-description').textContent =
-        data.description;
+    dom.planetImage.src = data.image;
+    dom.planetTitle.textContent = planetName;
+    dom.planetDescription.textContent = data.description;
 
-    const statsList = document.getElementById('planet-stats');
+    const statsList = dom.planetStats;
     statsList.innerHTML = '';
     data.stats.forEach((stat) => {
         const li = document.createElement('li');
@@ -208,7 +223,7 @@ export function showInfoPanel(planetName, data) {
         `;
         statsList.appendChild(li);
     });
-    const factsList = document.getElementById('planet-facts');
+    const factsList = dom.planetFacts;
     factsList.innerHTML = '';
     data.facts.forEach((fact) => {
         const li = document.createElement('li');
@@ -216,7 +231,7 @@ export function showInfoPanel(planetName, data) {
         factsList.appendChild(li);
     });
 
-    document.getElementById('info-panel').classList.add('visible');
+    dom.infoPanel.classList.add('visible');
 }
 
 export function getCurrentPlanet() {
@@ -225,30 +240,20 @@ export function getCurrentPlanet() {
 
 export function getFormValues() {
     return {
-        name: document.getElementById('edit-name').value,
-        radius: parseFloat(document.getElementById('edit-size').value),
-        color: parseInt(
-            document.getElementById('edit-color').value.replace('#', ''),
-            16
-        ),
-        orbitRadius: parseFloat(document.getElementById('edit-distance').value),
-        yearDuration: parseFloat(document.getElementById('edit-year').value),
+        name: dom.editName.value,
+        radius: parseFloat(dom.editSize.value),
+        color: parseInt(dom.editColor.value.replace('#', ''), 16),
+        orbitRadius: parseFloat(dom.editDistance.value),
+        yearDuration: parseFloat(dom.editYear.value),
     };
 }
 
 export function getMoonFormValues() {
     return {
-        name: document.getElementById('moon-edit-name').value,
-        radius: parseFloat(document.getElementById('moon-edit-size').value),
-        color: parseInt(
-            document.getElementById('moon-edit-color').value.replace('#', ''),
-            16
-        ),
-        orbitRadius: parseFloat(
-            document.getElementById('moon-edit-distance').value
-        ),
-        orbitSpeed: parseFloat(
-            document.getElementById('moon-edit-speed').value
-        ),
+        name: dom.moonEditName.value,
+        radius: parseFloat(dom.moonEditSize.value),
+        color: parseInt(dom.moonEditColor.value.replace('#', ''), 16),
+        orbitRadius: parseFloat(dom.moonEditDistance.value),
+        orbitSpeed: parseFloat(dom.moonEditSpeed.value),
     };
 }

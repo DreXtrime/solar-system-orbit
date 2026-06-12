@@ -158,6 +158,7 @@ UI.renderPlanetList(planets, (planet) => {
 
 UI.initUI(planets, {
     onSave: (values, planet) => {
+        if (planet?.isStar) return;
         savePlanet(values, planet);
     },
     onDelete: (planet) => deletePlanet(planet),
