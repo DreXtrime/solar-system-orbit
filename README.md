@@ -42,6 +42,8 @@ Includes entries for all 8 planets, plus Pluto and the Sun.
 - Saturn's rings
 - Info Panel
 
+If the application is too taxing for your system you can append `?lowGraphics` to the url, which disables certain graphical effects.
+
 ## Screenshots
 <details>
 <summary>Click for screenshots</summary>
@@ -67,7 +69,8 @@ Includes entries for all 8 planets, plus Pluto and the Sun.
 ## Deployment
 
 Deployed automatically to [Zone.eu](https://www.zone.eu) via GitHub Actions on every push to `main`.  
-Thank you to [kood//](https://kood.tech/en/) and [Zone](https://www.zone.eu) for providing the domain!
+Thank you to [kood//](https://kood.tech/en/) and [Zone](https://www.zone.eu) for providing the domain!  
+**https://orbit.tanelneitov.eu** or **https://orbit.tanelneitov.eu?lowGraphics**
 
 ### Prerequisites
 - Node.js 22+
@@ -79,6 +82,7 @@ Run local
 npm install
 npm run dev
 ```
+The url will be printed in the terminal.
 
 ### Build & Preview
 (Building the project improves performance)
@@ -88,8 +92,10 @@ npm install
 npm run build
 npm start
 ```
+The url will be printed in the terminal.
 
-> `npm start` will error if the project hasn't been built yet.
+> `npm start` will error if the project hasn't been built yet.  
+Add `?lowGraphics` to the url to disable some of the graphical effects.
 
 ---
 
