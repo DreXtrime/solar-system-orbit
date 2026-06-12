@@ -29,19 +29,54 @@ planets.forEach((planet) => {
     });
 });
 
+// Scene helpers
+function addPlanetToScene(planet) {
+    scene.add(planet.mesh);
+    if (planet.orbitRing) scene.add(planet.orbitRing);
+    if (planet.ring) scene.add(planet.ring);
+}
+
+function removePlanetFromScene(planet) {
+    scene.remove(planet.mesh);
+    if (planet.orbitRing) scene.remove(planet.orbitRing);
+    if (planet.ring) scene.remove(planet.ring);
+}
+
+function addMoonToScene(moon) {
+    scene.add(moon.mesh);
+    if (moon.orbitRing) scene.add(moon.orbitRing);
+}
+
+function removeMoonFromScene(moon) {
+    scene.remove(moon.mesh);
+    if (moon.orbitRing) scene.remove(moon.orbitRing);
+}
+
+// Position sync when scene is paused
+function syncPlanetPosition(planet) {
+    planet.mesh.position.x = Math.cos(planet.angle) * planet.orbitScaledRadius;
+    planet.mesh.position.z = Math.sin(planet.angle) * planet.orbitScaledRadius;
+    if (planet.ring) planet.ring.position.copy(planet.mesh.position);
+    planet.moons.forEach((moon) => syncMoonPosition(moon, planet));
+}
+
+function syncMoonPosition(moon, planet) {
+    moon.mesh.position.x =
+        planet.mesh.position.x + Math.cos(moon.angle) * moon.orbitRadius;
+    moon.mesh.position.z =
+        planet.mesh.position.z + Math.sin(moon.angle) * moon.orbitRadius;
+    moon.orbitRing.position.x = planet.mesh.position.x;
+    moon.orbitRing.position.z = planet.mesh.position.z;
+}
+
+// CRUD
 function savePlanet(values, existingPlanet) {
     if (existingPlanet) {
-        const oldMesh = existingPlanet.mesh;
-        const oldRing = existingPlanet.orbitRing;
-        const oldPlanetRing = existingPlanet.ring;
+        removePlanetFromScene(existingPlanet);
         existingPlanet.update(values);
         existingPlanet.create();
-        scene.add(existingPlanet.mesh);
-        if (existingPlanet.orbitRing) scene.add(existingPlanet.orbitRing);
-        if (existingPlanet.ring) scene.add(existingPlanet.ring);
-        scene.remove(oldMesh);
-        scene.remove(oldRing);
-        if (oldPlanetRing) scene.remove(oldPlanetRing);
+        syncPlanetPosition(existingPlanet);
+        addPlanetToScene(existingPlanet);
         UI.renderPlanetList(planets, (planet) => UI.showEditView(planet));
         setPreviewPlanet(existingPlanet);
     } else {
@@ -55,8 +90,7 @@ function savePlanet(values, existingPlanet) {
             0.02
         );
         newPlanet.create();
-        scene.add(newPlanet.mesh);
-        if (newPlanet.orbitRing) scene.add(newPlanet.orbitRing);
+        addPlanetToScene(newPlanet);
         planets.push(newPlanet);
         UI.renderPlanetList(planets, (planet) => UI.showEditView(planet));
         UI.showEditView(newPlanet);
@@ -65,18 +99,15 @@ function savePlanet(values, existingPlanet) {
 
 function saveMoon(values, existingMoon, planet) {
     if (existingMoon) {
-        const oldMesh = existingMoon.mesh;
-        const oldRing = existingMoon.orbitRing;
+        removeMoonFromScene(existingMoon);
         existingMoon.name = values.name;
         existingMoon.radius = values.radius;
         existingMoon.color = values.color;
         existingMoon.orbitRadius = values.orbitRadius;
         existingMoon.orbitSpeed = values.orbitSpeed;
         existingMoon.create();
-        scene.add(existingMoon.mesh);
-        if (existingMoon.orbitRing) scene.add(existingMoon.orbitRing);
-        scene.remove(oldMesh);
-        scene.remove(oldRing);
+        syncMoonPosition(existingMoon, planet);
+        addMoonToScene(existingMoon);
         UI.showMoonEditView(existingMoon, planet);
     } else {
         if (!values.name) return;
@@ -88,20 +119,15 @@ function saveMoon(values, existingMoon, planet) {
             values.orbitSpeed
         );
         newMoon.create();
-        scene.add(newMoon.mesh);
-        if (newMoon.orbitRing) scene.add(newMoon.orbitRing);
+        addMoonToScene(newMoon);
         planet.moons.push(newMoon);
         UI.showMoonEditView(newMoon, planet);
     }
 }
 
 function deletePlanet(planet) {
-    planet.moons.forEach((moon) => {
-        scene.remove(moon.mesh);
-        scene.remove(moon.orbitRing);
-    });
-    scene.remove(planet.mesh);
-    scene.remove(planet.orbitRing);
+    planet.moons.forEach((moon) => removeMoonFromScene(moon));
+    removePlanetFromScene(planet);
     const planetIndex = planets.indexOf(planet);
     planets.splice(planetIndex, 1);
     UI.renderPlanetList(planets, (p) => UI.showEditView(p));
@@ -109,8 +135,7 @@ function deletePlanet(planet) {
 }
 
 function deleteMoon(moon, planet) {
-    scene.remove(moon.mesh);
-    scene.remove(moon.orbitRing);
+    removeMoonFromScene(moon);
     const index = planet.moons.indexOf(moon);
     planet.moons.splice(index, 1);
     UI.showEditView(planet);
