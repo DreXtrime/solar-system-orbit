@@ -2,7 +2,7 @@ import Planet from './bodies.js';
 import Moon from './moons.js';
 
 export const planets = [
-    new Planet('Sun', 109.1, 0xffffff, 0, 0.1, 0.04, 'sun.jpg', true),
+    new Planet('Sun', 109.1, 0xffffff, 0, 0.1, 0.04, 'sun.webp', true),
     new Planet(
         'Mercury',
         0.383,
@@ -10,7 +10,7 @@ export const planets = [
         0.387,
         0.240846,
         0.04,
-        'mercury.jpg'
+        'mercury.webp'
     ),
     new Planet(
         'Venus',
@@ -19,13 +19,13 @@ export const planets = [
         0.723,
         0.615198,
         3.2,
-        'venus_atmosphere.jpg',
+        'venus_atmosphere.webp',
         false,
         true
     ),
-    new Planet('Earth', 1.0, 0xffffff, 1.0, 1.0, 1.0, 'earth.jpg'),
-    new Planet('Mars', 0.532, 0xffffff, 1.52, 1.8808, 0.98, 'mars.jpg'),
-    new Planet('Jupiter', 10.97, 0xffffff, 5.2, 11.862, 2.42, 'jupiter.jpg'),
+    new Planet('Earth', 1.0, 0xffffff, 1.0, 1.0, 1.0, 'earth.webp'),
+    new Planet('Mars', 0.532, 0xffffff, 1.52, 1.8808, 0.98, 'mars.webp'),
+    new Planet('Jupiter', 10.97, 0xffffff, 5.2, 11.862, 2.42, 'jupiter.webp'),
     new Planet(
         'Saturn',
         9.14,
@@ -33,7 +33,7 @@ export const planets = [
         9.58,
         29.457,
         0.54,
-        'saturn.jpg',
+        'saturn.webp',
         false,
         false,
         true
@@ -45,11 +45,11 @@ export const planets = [
         19.2,
         84.017,
         1.4,
-        'uranus.jpg',
+        'uranus.webp',
         false,
         true
     ),
-    new Planet('Neptune', 3.86, 0xffffff, 30.05, 164.79, 1.49, 'neptune.jpg'),
+    new Planet('Neptune', 3.86, 0xffffff, 30.05, 164.79, 1.49, 'neptune.webp'),
     new Planet(
         'Pluto',
         0.187,
@@ -57,7 +57,7 @@ export const planets = [
         39.5,
         248.0,
         0.16,
-        'pluto.jpg',
+        'pluto.webp',
         false,
         true
     ),
@@ -65,7 +65,7 @@ export const planets = [
 
 planets
     .find((p) => p.name === 'Earth')
-    .moons.push(new Moon('Moon', 0.18, 0xffffff, 1.3, 1.5, 'moon.jpg'));
+    .moons.push(new Moon('Moon', 0.18, 0xffffff, 1.3, 1.5, 'moon.webp'));
 planets
     .find((p) => p.name === 'Jupiter')
     .moons.push(new Moon('Io', 0.4, 0xffffff, 4.2, 1.8, 'Io.webp'));

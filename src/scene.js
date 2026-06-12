@@ -10,7 +10,7 @@ export const scene = new THREE.Scene();
 // Skybox
 const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
 const skyMaterial = new THREE.MeshBasicMaterial({
-    map: new THREE.TextureLoader().load('/textures/stars.jpg'),
+    map: new THREE.TextureLoader().load('/textures/stars.webp'),
     side: THREE.BackSide,
 });
 const skybox = new THREE.Mesh(skyGeometry, skyMaterial);
