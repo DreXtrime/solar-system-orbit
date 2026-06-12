@@ -51,6 +51,7 @@ export const camera = new THREE.PerspectiveCamera(
 );
 
 // Fade in
+export const introState = { started: false };
 window.addEventListener('load', () => {
     setTimeout(() => {
         const overlay = document.getElementById('fade-overlay');
