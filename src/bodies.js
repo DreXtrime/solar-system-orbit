@@ -64,7 +64,7 @@ export default class Planet {
             );
         }
         const geometry = new THREE.BufferGeometry().setFromPoints(segments);
-        const material = new THREE.LineBasicMaterial({ color: 0x4a4a4a });
+        const material = new THREE.LineBasicMaterial({ color: 0x707070 });
         return new THREE.Line(geometry, material);
     }
 
