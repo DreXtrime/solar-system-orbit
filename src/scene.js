@@ -3,9 +3,12 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
+const lowGraphics = new URLSearchParams(window.location.search).has('lowGraphics');
+
 // ============================================================
 // SCENE
 // ============================================================
+
 export const scene = new THREE.Scene();
 // Skybox
 const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
@@ -28,7 +31,9 @@ function createStarfield() {
     const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.3 });
     return new THREE.Points(geometry, material);
 }
-scene.add(createStarfield());
+if (!lowGraphics) {
+    scene.add(createStarfield());
+}
 
 // Sunlight
 const sunLight = new THREE.PointLight(0xca3e09, 1, 0, 0.1);
@@ -104,4 +109,6 @@ const bloomPass = new UnrealBloomPass(
     0.9,
     0.5
 );
-composer.addPass(bloomPass);
+if (!lowGraphics) {
+    composer.addPass(bloomPass);
+}
