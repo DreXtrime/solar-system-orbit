@@ -172,6 +172,7 @@ window.addEventListener('load', () => {
         const overlay = document.getElementById('fade-overlay');
         overlay.style.opacity = '0';
         overlay.addEventListener('transitionend', () => overlay.remove());
+        introStartTime = performance.now();
         introComplete = false;
     }, 800);
 });
@@ -182,7 +183,11 @@ renderer.compile(scene, camera);
 function animate(time) {
     controls.update();
     if (!introComplete) {
-        if (introStartTime === null) introStartTime = time;
+        if (introStartTime === null) {
+            controls.enabled = false;
+            composer.render(scene, camera);
+            return;
+        }
         const progress = Math.min((time - introStartTime) / INTRO_DURATION, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
         camera.position.x = THREE.MathUtils.lerp(200, 0, eased);
