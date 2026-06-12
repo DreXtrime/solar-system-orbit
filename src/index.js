@@ -144,12 +144,11 @@ renderer.compile(scene, camera);
 function animate(time) {
     if (!introState.started) return;
     if (!introStartTime) introStartTime = clock.getElapsedTime();
-    const time = clock.getElapsedTime() - introStartTime;
 
     controls.update();
 
     if (!introComplete) {
-        const progress = Math.min(time / INTRO_DURATION, 1);
+        const progress = Math.min((clock.getElapsedTime() - introStartTime) / INTRO_DURATION, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
 
         camera.position.x = THREE.MathUtils.lerp(200, 0, eased);
