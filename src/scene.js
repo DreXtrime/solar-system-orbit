@@ -55,7 +55,10 @@ window.addEventListener('load', () => {
     setTimeout(() => {
         const overlay = document.getElementById('fade-overlay');
         overlay.style.opacity = '0';
-        overlay.addEventListener('transitionend', () => overlay.remove());
+        overlay.addEventListener('transitionend', () => {
+            overlay.remove();
+            introState.started = true;
+        });
     }, 300);
 });
 // Hint

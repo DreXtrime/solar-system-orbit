@@ -8,8 +8,10 @@ import { controls } from './controls.js';
 import { planets } from './planets.js';
 import { drawPlanetLine, updateFocus } from './interaction.js';
 import { setPreviewPlanet } from './preview.js';
+import { introState } from './scene.js';
 
 const INTRO_DURATION = 5000;
+let introStartTime = null;
 let introComplete = false;
 let simulationSpeed = 0.3;
 let paused = false;
@@ -140,6 +142,10 @@ animatePreview();
 renderer.compile(scene, camera);
 
 function animate(time) {
+    if (!introState.started) return;
+    if (!introStartTime) introStartTime = clock.getElapsedTime();
+    const time = clock.getElapsedTime() - introStartTime;
+
     controls.update();
 
     if (!introComplete) {
