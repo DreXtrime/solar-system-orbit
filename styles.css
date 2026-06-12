@@ -15,6 +15,36 @@ body {
     overflow: hidden;
 }
 
+@media (min-width: 2560px) and (max-width: 3839px) {
+    #planet-panel,
+    #controls,
+    #tooltip {
+        zoom: 1.8;
+    }
+    #info-panel {
+        zoom: 1.5;
+        top: 20px;
+        bottom: -350px;
+        transform: none;
+        max-height: none;
+    }
+}
+
+@media (min-width: 3840px) {
+    #planet-panel,
+    #controls,
+    #tooltip {
+        zoom: 2;
+    }
+    #info-panel {
+        zoom: 2;
+        top: 20px;
+        bottom: 20px;
+        transform: none;
+        max-height: none;
+    }
+}
+
 *::-webkit-scrollbar {
     width: 4px;
 }
