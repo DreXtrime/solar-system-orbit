@@ -1,7 +1,7 @@
-import * as THREE from "three";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 // ============================================================
 // SCENE
@@ -10,7 +10,7 @@ export const scene = new THREE.Scene();
 // Skybox
 const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
 const skyMaterial = new THREE.MeshBasicMaterial({
-    map: new THREE.TextureLoader().load("/textures/stars.jpg"),
+    map: new THREE.TextureLoader().load('/textures/stars.jpg'),
     side: THREE.BackSide,
 });
 const skybox = new THREE.Mesh(skyGeometry, skyMaterial);
@@ -18,17 +18,17 @@ scene.add(skybox);
 
 // Starfield
 function createStarfield() {
-    const count = 5000
-    const positions = new Float32Array(count * 3)
+    const count = 5000;
+    const positions = new Float32Array(count * 3);
     for (let i = 0; i < count * 3; i++) {
-        positions[i] = (Math.random() - 0.5) * 800
+        positions[i] = (Math.random() - 0.5) * 800;
     }
-    const geometry = new THREE.BufferGeometry()
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.3 })
-    return new THREE.Points(geometry, material)
-};
-scene.add(createStarfield())
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.3 });
+    return new THREE.Points(geometry, material);
+}
+scene.add(createStarfield());
 
 // Sunlight
 const sunLight = new THREE.PointLight(0xca3e09, 1, 0, 0.1);
@@ -47,26 +47,30 @@ export const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000,
+    1000
 );
 
 // Fade in
 window.addEventListener('load', () => {
     setTimeout(() => {
-        const overlay = document.getElementById('fade-overlay')
-        overlay.style.opacity = '0'
-        overlay.addEventListener('transitionend', () => overlay.remove())
-    }, 300)
-})
+        const overlay = document.getElementById('fade-overlay');
+        overlay.style.opacity = '0';
+        overlay.addEventListener('transitionend', () => overlay.remove());
+    }, 300);
+});
 // Hint
-document.addEventListener('mousedown', () => {
-    setTimeout(removeHint, 3000)
-}, { once: true })
+document.addEventListener(
+    'mousedown',
+    () => {
+        setTimeout(removeHint, 3000);
+    },
+    { once: true }
+);
 function removeHint() {
-    const hint = document.getElementById('hint')
-    if (!hint) return
-    hint.style.opacity = '0'
-    hint.addEventListener('transitionend', () => hint.remove())
+    const hint = document.getElementById('hint');
+    if (!hint) return;
+    hint.style.opacity = '0';
+    hint.addEventListener('transitionend', () => hint.remove());
 }
 
 // ============================================================
@@ -77,16 +81,16 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 // Resizing
-window.addEventListener("resize", handleResize);
+window.addEventListener('resize', handleResize);
 document.body.appendChild(renderer.domElement);
 function handleResize() {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    camera.aspect = width / height
-    camera.updateProjectionMatrix()
-    renderer.setSize(width, height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    composer.setSize(width, height)
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    composer.setSize(width, height);
 }
 
 // Tonemapper
@@ -104,7 +108,6 @@ const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
     1.5,
     0.9,
-    0.5,
+    0.5
 );
 composer.addPass(bloomPass);
-

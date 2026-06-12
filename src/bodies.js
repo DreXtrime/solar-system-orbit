@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 const EARTH_DIAMETER_KM = 12742;
 const EARTH_DISTANCE_KM = 149598023;
@@ -16,7 +16,7 @@ export default class Planet {
         texture = null,
         isStar = false,
         clockwiseRotation = false,
-        hasRing = false,
+        hasRing = false
     ) {
         this.name = name;
         this.isStar = isStar;
@@ -29,7 +29,7 @@ export default class Planet {
         this.yearDuration = yearDuration;
         this.rotationSpeed = rotationSpeed;
         this.texture = texture;
-        this.moons = []
+        this.moons = [];
         this.angle = Math.random() * Math.PI * 2;
         this.mesh = null;
         this.orbitRing = null;
@@ -46,8 +46,8 @@ export default class Planet {
             this.orbitRing = this.createOrbit();
         }
         if (this.hasRing) {
-            this.ring = this.createRing()
-            this.mesh.add(this.ring)
+            this.ring = this.createRing();
+            this.mesh.add(this.ring);
         }
     }
 
@@ -60,8 +60,8 @@ export default class Planet {
                 new THREE.Vector3(
                     Math.cos(angle) * this.orbitScaledRadius,
                     0,
-                    Math.sin(angle) * this.orbitScaledRadius,
-                ),
+                    Math.sin(angle) * this.orbitScaledRadius
+                )
             );
         }
         const geometry = new THREE.BufferGeometry().setFromPoints(segments);
@@ -70,59 +70,67 @@ export default class Planet {
     }
 
     createPlanet() {
-        const geometry = new THREE.SphereGeometry(this.scaledRadius)
+        const geometry = new THREE.SphereGeometry(this.scaledRadius);
         if (this.texture && !this._textureCache) {
-            this._textureCache = new THREE.TextureLoader().load(`/textures/${this.texture}`)
+            this._textureCache = new THREE.TextureLoader().load(
+                `/textures/${this.texture}`
+            );
         }
         const material = new THREE.MeshStandardMaterial({
             map: this.texture ? this._textureCache : null,
-            color: this.color
-        })
-        return new THREE.Mesh(geometry, material)
+            color: this.color,
+        });
+        return new THREE.Mesh(geometry, material);
     }
 
     createStar() {
         const geometry = new THREE.SphereGeometry(this.scaledRadius);
         const material = this.texture
-            ? new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load(`/textures/${this.texture}`) })
+            ? new THREE.MeshBasicMaterial({
+                  map: new THREE.TextureLoader().load(
+                      `/textures/${this.texture}`
+                  ),
+              })
             : new THREE.MeshBasicMaterial({ color: this.color });
         return new THREE.Mesh(geometry, material);
     }
 
     createRing() {
-        const innerRadius = this.scaledRadius * 1.0
-        const outerRadius = this.scaledRadius * 2.2
-        const geometry = new THREE.RingGeometry(innerRadius, outerRadius, 64)
-        const pos = geometry.attributes.position
-        const uv = geometry.attributes.uv
+        const innerRadius = this.scaledRadius * 1.0;
+        const outerRadius = this.scaledRadius * 2.2;
+        const geometry = new THREE.RingGeometry(innerRadius, outerRadius, 64);
+        const pos = geometry.attributes.position;
+        const uv = geometry.attributes.uv;
         for (let i = 0; i < pos.count; i++) {
-            const x = pos.getX(i)
-            const y = pos.getY(i)
-            const dist = Math.sqrt(x * x + y * y)
-            const u = (dist - innerRadius) / (outerRadius - innerRadius)
-            uv.setXY(i, u, 1)
+            const x = pos.getX(i);
+            const y = pos.getY(i);
+            const dist = Math.sqrt(x * x + y * y);
+            const u = (dist - innerRadius) / (outerRadius - innerRadius);
+            uv.setXY(i, u, 1);
         }
-        const texture = new THREE.TextureLoader().load('/textures/saturn_ring.png')
-        texture.wrapS = THREE.RepeatWrapping
-        texture.repeat.set(1, 1)
+        const texture = new THREE.TextureLoader().load(
+            '/textures/saturn_ring.png'
+        );
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.repeat.set(1, 1);
         const material = new THREE.MeshBasicMaterial({
             map: texture,
             side: THREE.DoubleSide,
             transparent: true,
-        })
-        const ring = new THREE.Mesh(geometry, material)
-        ring.rotation.x = Math.PI / 2.5
-        return ring
+        });
+        const ring = new THREE.Mesh(geometry, material);
+        ring.rotation.x = Math.PI / 2.5;
+        return ring;
     }
 
     update(values) {
-        this.name = values.name
-        this.radius = values.radius
-        this.color = values.color
-        this.orbitRadius = values.orbitRadius
-        this.orbitScaledRadius = this.#scaleOrbit()
-        this.yearDuration = values.yearDuration
-        this.scaledRadius = this.#scaleRadius()
+        this.name = values.name;
+        this.radius = values.radius;
+        this.color = values.color;
+        this.orbitRadius = values.orbitRadius;
+        this.orbitScaledRadius = this.#scaleOrbit();
+        this.yearDuration = values.yearDuration;
+        this.scaledRadius = this.#scaleRadius();
     }
 
     #scaleRadius() {

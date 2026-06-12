@@ -4,9 +4,9 @@
         <meta charset="utf-8" />
         <title>three.js app</title>
         <style>
-        body {
-            margin: 0;
-        }
+            body {
+                margin: 0;
+            }
         </style>
         <link rel="stylesheet" href="./styles.css" />
     </head>
@@ -52,12 +52,38 @@
                     <h2 id="edit-title">Edit Planet</h2>
                     <label>Name <input type="text" id="edit-name" /></label>
                     <div id="extra-planet-fields">
-                        <label>Color <input type="color" id="edit-color" /></label>
-                        <label>Size <input type="range" id="edit-size" min="0.1" max="20" step="0.1" /></label>
-                        <label id="label-distance">Orbit Distance <input type="range" id="edit-distance" min="0.1" max="50" step="0.1" /></label>
-                        <label>Year Duration <input type="range" id="edit-year" min="0.05" max="20" step="0.1" /></label>
+                        <label
+                            >Color <input type="color" id="edit-color"
+                        /></label>
+                        <label
+                            >Size
+                            <input
+                                type="range"
+                                id="edit-size"
+                                min="0.1"
+                                max="20"
+                                step="0.1"
+                        /></label>
+                        <label id="label-distance"
+                            >Orbit Distance
+                            <input
+                                type="range"
+                                id="edit-distance"
+                                min="0.1"
+                                max="50"
+                                step="0.1"
+                        /></label>
+                        <label
+                            >Year Duration
+                            <input
+                                type="range"
+                                id="edit-year"
+                                min="0.05"
+                                max="20"
+                                step="0.1"
+                        /></label>
                         <div id="moon-section">
-                            <hr>
+                            <hr />
                             <h3>Moons</h3>
                             <ul id="moon-list"></ul>
                             <button id="btn-add-moon">Add Moon</button>
@@ -69,12 +95,40 @@
                 <div id="moon-edit-view" class="hidden">
                     <button id="btn-moon-back">← Back</button>
                     <h2 id="moon-edit-title">Edit Moon</h2>
-                    <label>Name <input type="text" id="moon-edit-name" /></label>
+                    <label
+                        >Name <input type="text" id="moon-edit-name"
+                    /></label>
                     <div id="extra-moon-fields">
-                        <label>Color <input type="color" id="moon-edit-color" /></label>
-                        <label>Size <input type="range" id="moon-edit-size" min="0.05" max="2" step="0.05" /></label>
-                        <label>Orbit Distance <input type="range" id="moon-edit-distance" min="0.5" max="10" step="0.1" /></label>
-                        <label>Orbit Speed <input type="range" id="moon-edit-speed" min="0.1" name="5" step="0.1" /></label>
+                        <label
+                            >Color <input type="color" id="moon-edit-color"
+                        /></label>
+                        <label
+                            >Size
+                            <input
+                                type="range"
+                                id="moon-edit-size"
+                                min="0.05"
+                                max="2"
+                                step="0.05"
+                        /></label>
+                        <label
+                            >Orbit Distance
+                            <input
+                                type="range"
+                                id="moon-edit-distance"
+                                min="0.5"
+                                max="10"
+                                step="0.1"
+                        /></label>
+                        <label
+                            >Orbit Speed
+                            <input
+                                type="range"
+                                id="moon-edit-speed"
+                                min="0.1"
+                                name="5"
+                                step="0.1"
+                        /></label>
                     </div>
                     <button id="btn-moon-delete">Delete</button>
                 </div>
@@ -85,7 +139,7 @@
             <div id="panel-inner">
                 <button id="btn-close-info">✕</button>
                 <div id="planet-image-container">
-                    <img id="planet-image"/>
+                    <img id="planet-image" />
                     <h2 id="planet-title"></h2>
                 </div>
                 <div id="panel-body">

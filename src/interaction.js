@@ -1,26 +1,26 @@
-import * as THREE from "three";
-import { planets } from "./planets.js";
-import { camera, renderer } from "./scene.js";
+import * as THREE from 'three';
+import { planets } from './planets.js';
+import { camera, renderer } from './scene.js';
 import { showInfoPanel } from './ui.js';
 import { planetData } from './planetData.js';
 
-const tooltip = document.getElementById("tooltip");
-const tooltipName = document.getElementById("tooltip-name");
-const tooltipSize = document.getElementById("tooltip-size");
-const tooltipDistance = document.getElementById("tooltip-distance");
+const tooltip = document.getElementById('tooltip');
+const tooltipName = document.getElementById('tooltip-name');
+const tooltipSize = document.getElementById('tooltip-size');
+const tooltipDistance = document.getElementById('tooltip-distance');
 
 // Raycasting
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let hoveredPlanet = null;
 
-window.addEventListener("mousemove", (event) => {
+window.addEventListener('mousemove', (event) => {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     const overUI = event.target !== renderer.domElement;
     if (overUI) {
-        tooltip.classList.add("hidden");
+        tooltip.classList.add('hidden');
         return;
     }
 
@@ -44,11 +44,11 @@ window.addEventListener("mousemove", (event) => {
     }
 
     if (!planet) {
-        tooltip.classList.add("hidden");
+        tooltip.classList.add('hidden');
         return;
     }
 
-    tooltip.classList.remove("hidden");
+    tooltip.classList.remove('hidden');
 
     const offsetX = 15;
     const offsetY = 15;
@@ -58,16 +58,16 @@ window.addEventListener("mousemove", (event) => {
     tooltipSize.textContent = `Size: ${planet.radius} Earths`;
     tooltipDistance.textContent = `Distance: ${planet.orbitRadius} AU`;
 
-    tooltip.style.left = event.clientX + offsetX + "px";
-    tooltip.style.top = event.clientY + offsetY + "px";
+    tooltip.style.left = event.clientX + offsetX + 'px';
+    tooltip.style.top = event.clientY + offsetY + 'px';
 });
 // Current planet line
-const lineCanvas = document.getElementById("line-canvas");
-const lineCtx = lineCanvas.getContext("2d");
+const lineCanvas = document.getElementById('line-canvas');
+const lineCtx = lineCanvas.getContext('2d');
 lineCanvas.width = window.innerWidth;
 lineCanvas.height = window.innerHeight;
 
-window.addEventListener("resize", () => {
+window.addEventListener('resize', () => {
     lineCanvas.width = window.innerWidth;
     lineCanvas.height = window.innerHeight;
 });
@@ -79,14 +79,14 @@ export function drawPlanetLine(planet, camera) {
     if (vector.z > 1) return; // planet behind camera
     const px = (vector.x * 0.5 + 0.5) * window.innerWidth;
     const py = (-vector.y * 0.5 + 0.5) * window.innerHeight;
-    const panel = document.getElementById("planet-panel");
+    const panel = document.getElementById('planet-panel');
     const rect = panel.getBoundingClientRect();
     const panelX = rect.right;
     const panelY = rect.top + rect.height / 2;
     lineCtx.beginPath();
     lineCtx.moveTo(panelX, panelY);
     lineCtx.lineTo(px, py);
-    lineCtx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    lineCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
     lineCtx.lineWidth = 1;
     lineCtx.stroke();
 }
@@ -112,15 +112,18 @@ export function updateFocus(camera, controls) {
     controls.update();
 }
 
-renderer.domElement.addEventListener("mousedown", () => {
+renderer.domElement.addEventListener('mousedown', () => {
     mouseMoved = false;
 });
-renderer.domElement.addEventListener("mousemove", () => {
+renderer.domElement.addEventListener('mousemove', () => {
     mouseMoved = true;
 });
-renderer.domElement.addEventListener("click", () => {
+renderer.domElement.addEventListener('click', () => {
     if (!mouseMoved && hoveredPlanet) {
         startFocus(hoveredPlanet);
-        showInfoPanel(hoveredPlanet.name, planetData[hoveredPlanet.name.toLowerCase()]);
+        showInfoPanel(
+            hoveredPlanet.name,
+            planetData[hoveredPlanet.name.toLowerCase()]
+        );
     }
 });
