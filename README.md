@@ -4,7 +4,7 @@ An interactive 3D model of the solar system built with Three.js — created as p
 
 🌐Automatically deployed via github actions version available on my site. **https://orbit.tanelneitov.eu**
 
-![Screenshot](./assets/screenshot_1.webp)
+![Screenshot](./assets/screenshot_1.png)
 ---
 ## Features
 
