@@ -8,7 +8,6 @@ import { controls } from './controls.js';
 import { planets } from './planets.js';
 import { drawPlanetLine, updateFocus } from './interaction.js';
 import { setPreviewPlanet } from './preview.js';
-import { introState } from './scene.js';
 
 const INTRO_DURATION = 5000;
 let introStartTime = null;
@@ -20,6 +19,7 @@ planets.forEach((planet) => {
     planet.create();
     scene.add(planet.mesh);
     if (planet.orbitRing) scene.add(planet.orbitRing);
+    if (planet.ring) scene.add(planet.ring);
 });
 planets.forEach((planet) => {
     planet.moons.forEach((moon) => {
@@ -33,12 +33,15 @@ function savePlanet(values, existingPlanet) {
     if (existingPlanet) {
         const oldMesh = existingPlanet.mesh;
         const oldRing = existingPlanet.orbitRing;
+        const oldPlanetRing = existingPlanet.ring;
         existingPlanet.update(values);
         existingPlanet.create();
         scene.add(existingPlanet.mesh);
         if (existingPlanet.orbitRing) scene.add(existingPlanet.orbitRing);
+        if (existingPlanet.ring) scene.add(existingPlanet.ring);
         scene.remove(oldMesh);
         scene.remove(oldRing);
+        if (oldPlanetRing) scene.remove(oldPlanetRing);
         UI.renderPlanetList(planets, (planet) => UI.showEditView(planet));
         setPreviewPlanet(existingPlanet);
     } else {
@@ -138,30 +141,29 @@ UI.initUI(planets, {
     onBack: () => drawPlanetLine(null, camera),
 });
 
+// Fade in
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const overlay = document.getElementById('fade-overlay');
+        overlay.style.opacity = '0';
+        overlay.addEventListener('transitionend', () => overlay.remove());
+        introComplete = false;
+    }, 300);
+});
+
 animatePreview();
 renderer.compile(scene, camera);
 
 function animate(time) {
-    if (!introState.started) return;
-    if (!introStartTime) introStartTime = clock.getElapsedTime();
-
     controls.update();
-
     if (!introComplete) {
-        const progress = Math.min((clock.getElapsedTime() - introStartTime) / INTRO_DURATION, 1);
+        if (introStartTime === null) introStartTime = time;
+        const progress = Math.min((time - introStartTime) / INTRO_DURATION, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
-
         camera.position.x = THREE.MathUtils.lerp(200, 0, eased);
         camera.position.y = THREE.MathUtils.lerp(100, 10, eased);
         camera.position.z = THREE.MathUtils.lerp(200, 10, eased);
-
-        const lookTarget = new THREE.Vector3(
-            THREE.MathUtils.lerp(0, 0, eased),
-            THREE.MathUtils.lerp(50, 0, eased),
-            THREE.MathUtils.lerp(0, 0, eased)
-        );
-        camera.lookAt(lookTarget);
-
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
         if (progress >= 1) {
             introComplete = true;
             controls.enabled = true;
@@ -169,6 +171,7 @@ function animate(time) {
             controls.enabled = false;
         }
     }
+
     if (!paused) {
         planets.forEach((planet) => {
             if (planet.clockwiseRotation) {
@@ -177,6 +180,9 @@ function animate(time) {
             } else {
                 planet.mesh.rotation.y +=
                     0.01 * planet.rotationSpeed * simulationSpeed;
+            }
+            if (planet.ring) {
+                planet.ring.position.copy(planet.mesh.position);
             }
             if (planet.isStar) return;
             planet.angle += (0.01 * simulationSpeed) / planet.yearDuration;

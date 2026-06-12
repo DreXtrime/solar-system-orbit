@@ -9,4 +9,4 @@ controls.dampingFactor = 0.06;
 controls.zoomSpeed = 0.5;
 controls.minDistance = 4;
 camera.lookAt(0, 0, 0);
-camera.position.set(0, 10, 10);
+camera.position.set(200, 100, 200);

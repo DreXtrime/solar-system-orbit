@@ -47,7 +47,6 @@ export default class Planet {
         }
         if (this.hasRing) {
             this.ring = this.createRing();
-            this.mesh.add(this.ring);
         }
     }
 

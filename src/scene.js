@@ -49,19 +49,9 @@ export const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 );
+camera.position.set(200, 100, 200);
+camera.lookAt(0, 0, 0);
 
-// Fade in
-export const introState = { started: false };
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const overlay = document.getElementById('fade-overlay');
-        overlay.style.opacity = '0';
-        overlay.addEventListener('transitionend', () => {
-            overlay.remove();
-            introState.started = true;
-        });
-    }, 300);
-});
 // Hint
 document.addEventListener(
     'mousedown',
