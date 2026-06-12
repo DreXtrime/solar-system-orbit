@@ -99,9 +99,9 @@ export const composer = new EffectComposer(renderer);
 // Bloom
 composer.addPass(new RenderPass(scene, camera));
 const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    new THREE.Vector2(window.innerWidth * 0.1, window.innerHeight * 0.1),
     1.5,
     0.9,
     0.5
 );
-// composer.addPass(bloomPass);
+composer.addPass(bloomPass);

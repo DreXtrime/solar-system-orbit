@@ -24,7 +24,7 @@ previewScene.add(ambientLight);
 const previewComposer = new EffectComposer(previewRenderer);
 previewComposer.addPass(new RenderPass(previewScene, previewCamera));
 const previewBloom = new UnrealBloomPass(
-    new THREE.Vector2(240, 240),
+    new THREE.Vector2(20, 20),
     0.2,
     0.2,
     0.001
