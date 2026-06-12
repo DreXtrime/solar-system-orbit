@@ -173,7 +173,7 @@ window.addEventListener('load', () => {
         overlay.style.opacity = '0';
         overlay.addEventListener('transitionend', () => overlay.remove());
         introComplete = false;
-    }, 50);
+    }, 800);
 });
 
 animatePreview();
