@@ -137,6 +137,7 @@ UI.initUI(planets, {
 });
 
 animatePreview();
+renderer.compile(scene, camera);
 
 function animate(time) {
     controls.update();
