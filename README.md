@@ -1,8 +1,9 @@
 # Orbit
 
-An interactive 3D model of the solar system built with Three.js — created as part of a project to help kids get curious about space. Best experienced on a desktop.
+An interactive 3D model of the solar system built with Three.js. Created as part of a project to help kids get curious about space. Best experienced on a desktop.
 
-🌐Automatically deployed via github actions version available on my site. **https://orbit.tanelneitov.eu**
+---
+🌐 Automatically deployed via GitHub Actions on every change to my site at **https://orbit.tanelneitov.eu**
 
 ![Screenshot](./assets/screenshot_1.png)
 ---
