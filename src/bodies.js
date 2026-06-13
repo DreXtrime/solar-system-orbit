@@ -1,7 +1,5 @@
 import * as THREE from 'three';
 
-const EARTH_DIAMETER_KM = 12742;
-const EARTH_DISTANCE_KM = 149598023;
 const MAX_RADIUS = 15.0;
 const MAX_SUN_RADIUS = 3.0;
 
@@ -142,13 +140,5 @@ export default class Planet {
     #scaleOrbit() {
         const scaled = Math.log(this.orbitRadius + 1) * 15.0;
         return Math.max(5.0, scaled);
-    }
-
-    getRealDiameter() {
-        return this.radius * 2 * EARTH_DIAMETER_KM;
-    }
-
-    getRealDistance() {
-        return this.orbitRadius * EARTH_DISTANCE_KM;
     }
 }
