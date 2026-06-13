@@ -5,6 +5,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
 const canvas = document.getElementById('planet-preview');
 const previewRenderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+previewRenderer.setClearColor(0x000000, 0);
 previewRenderer.setSize(300, 300, false);
 canvas.style.width = '';
 canvas.style.height = '';
@@ -16,9 +17,8 @@ previewCamera.position.set(0, 0, 7);
 const previewLight = new THREE.PointLight(0xffffff, 5);
 previewLight.position.set(5, 5, 5);
 previewScene.add(previewLight);
-previewScene.add(new THREE.AmbientLight(0x404040, 5));
 
-const ambientLight = new THREE.AmbientLight(0x404040, 7);
+const ambientLight = new THREE.AmbientLight(0x404040, 12);
 previewScene.add(ambientLight);
 
 const previewComposer = new EffectComposer(previewRenderer);
@@ -33,8 +33,6 @@ previewComposer.addPass(previewBloom);
 
 let previewMesh = null;
 
-previewRenderer.setClearColor(0x000000, 0);
-
 export function setPreviewPlanet(planet) {
     if (!planet) {
         if (previewMesh) previewScene.remove(previewMesh);
@@ -47,7 +45,7 @@ export function setPreviewPlanet(planet) {
         previewScene.add(previewMesh);
     }
     previewMesh.material = planet.mesh.material.clone();
-    previewMesh.children = [];
+    previewMesh.clear();
     if (planet.hasRing && planet.ring) {
         const ringClone = planet.ring.clone();
         ringClone.scale.setScalar(1 / planet.scaledRadius);
