@@ -371,6 +371,17 @@ hr {
     display: block;
 }
 
+#planet-image {
+    transition:
+        height 0.5s ease,
+        mask-image 0.5s ease;
+}
+
+#planet-image-container:hover #planet-image {
+    height: 475px;
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
 #planet-title {
     font-size: 28px;
     margin-top: -10px;
