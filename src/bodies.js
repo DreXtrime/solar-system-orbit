@@ -35,11 +35,7 @@ export default class Planet {
     }
 
     create() {
-        if (this.isStar) {
-            this.mesh = this.createStar();
-        } else {
-            this.mesh = this.createPlanet();
-        }
+        this.mesh = this.isStar ? this.createStar() : this.createPlanet();
         if (!this.isStar) {
             this.orbitRing = this.createOrbit();
         }
