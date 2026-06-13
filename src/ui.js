@@ -43,7 +43,14 @@ const dom = {
 };
 
 export function initUI(planets, callbacks) {
-    // Planet Edit View
+    document.addEventListener(
+        'mousedown',
+        () => {
+            setTimeout(removeHint, 3000);
+        },
+        { once: true }
+    );
+
     dom.btnAddPlanet.addEventListener('click', () => {
         showEditView(null);
     });
@@ -105,6 +112,13 @@ export function initUI(planets, callbacks) {
     dom.btnCloseInfo.addEventListener('click', () => {
         dom.infoPanel.classList.remove('visible');
     });
+}
+
+function removeHint() {
+    const hint = document.getElementById('hint');
+    if (!hint) return;
+    hint.style.opacity = '0';
+    hint.addEventListener('transitionend', () => hint.remove());
 }
 
 export function renderPlanetList(planets, onSelect) {

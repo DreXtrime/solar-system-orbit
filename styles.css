@@ -19,7 +19,7 @@ body {
     #planet-panel,
     #controls,
     #tooltip {
-        zoom: 1.0;
+        zoom: 1;
     }
     #info-panel {
         zoom: 1.5;
