@@ -164,7 +164,7 @@ UI.initUI(planets, {
     onDelete: (planet) => deletePlanet(planet),
     onMoonSave: (values, moon, planet) => saveMoon(values, moon, planet),
     onMoonDelete: (moon, planet) => deleteMoon(moon, planet),
-    onBack: () => drawPlanetLine(null, camera),
+    onBack: () => drawPlanetLine(null),
 });
 
 // Fade in
@@ -237,8 +237,8 @@ function animate(time) {
         });
     }
     animatePreview();
-    updateFocus(camera, controls);
-    drawPlanetLine(UI.getCurrentPlanet(), camera);
+    updateFocus(controls);
+    drawPlanetLine(UI.getCurrentPlanet());
     composer.render(scene, camera);
 }
 

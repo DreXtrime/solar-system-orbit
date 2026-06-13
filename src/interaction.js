@@ -4,13 +4,14 @@ import { camera, renderer } from './scene.js';
 import { showInfoPanel } from './ui.js';
 import { planetData } from './planetData.js';
 
-const tooltip = document.getElementById('tooltip');
-const tooltipName = document.getElementById('tooltip-name');
-const tooltipSize = document.getElementById('tooltip-size');
-const tooltipDistance = document.getElementById('tooltip-distance');
 const dom = {
+    toolTip: document.getElementById('tooltip'),
+    toolTipName: document.getElementById('tooltip-name'),
+    toolTipSize: document.getElementById('tooltip-size'),
+    toolTipDistance: document.getElementById('tooltip-distance'),
     planetPanel: document.getElementById('planet-panel'),
-}
+    lineCanvas: document.getElementById('line-canvas'),
+};
 
 // Raycasting
 const raycaster = new THREE.Raycaster();
@@ -23,7 +24,7 @@ window.addEventListener('mousemove', (event) => {
 
     const overUI = event.target !== renderer.domElement;
     if (overUI) {
-        tooltip.classList.add('hidden');
+        dom.toolTip.classList.add('hidden');
         return;
     }
 
@@ -47,35 +48,34 @@ window.addEventListener('mousemove', (event) => {
     }
 
     if (!planet) {
-        tooltip.classList.add('hidden');
+        dom.toolTip.classList.add('hidden');
         return;
     }
 
-    tooltip.classList.remove('hidden');
+    dom.toolTip.classList.remove('hidden');
 
     const offsetX = 15;
     const offsetY = 15;
     hoveredPlanet = planet;
 
-    tooltipName.textContent = planet.name;
-    tooltipSize.textContent = `Size: ${planet.radius} Earths`;
-    tooltipDistance.textContent = `Distance: ${planet.orbitRadius} AU`;
+    dom.toolTipName.textContent = planet.name;
+    dom.toolTipSize.textContent = `Size: ${planet.radius} Earths`;
+    dom.toolTipDistance.textContent = `Distance: ${planet.orbitRadius} AU`;
 
-    tooltip.style.left = event.clientX + offsetX + 'px';
-    tooltip.style.top = event.clientY + offsetY + 'px';
+    dom.toolTip.style.left = event.clientX + offsetX + 'px';
+    dom.toolTip.style.top = event.clientY + offsetY + 'px';
 });
 // Current planet line
-const lineCanvas = document.getElementById('line-canvas');
-const lineCtx = lineCanvas.getContext('2d');
-lineCanvas.width = window.innerWidth;
-lineCanvas.height = window.innerHeight;
+const lineCtx = dom.lineCanvas.getContext('2d');
+dom.lineCanvas.width = window.innerWidth;
+dom.lineCanvas.height = window.innerHeight;
 
 window.addEventListener('resize', () => {
-    lineCanvas.width = window.innerWidth;
-    lineCanvas.height = window.innerHeight;
+    dom.lineCanvas.width = window.innerWidth;
+    dom.lineCanvas.height = window.innerHeight;
 });
-export function drawPlanetLine(planet, camera) {
-    lineCtx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
+export function drawPlanetLine(planet) {
+    lineCtx.clearRect(0, 0, dom.lineCanvas.width, dom.lineCanvas.height);
     if (!planet) return;
     const vector = planet.mesh.position.clone();
     vector.project(camera);
@@ -101,7 +101,7 @@ export function startFocus(planet) {
     focusTarget = planet;
 }
 
-export function updateFocus(camera, controls) {
+export function updateFocus(controls) {
     if (!focusTarget) return;
     const targetPos = focusTarget.mesh.position;
 
