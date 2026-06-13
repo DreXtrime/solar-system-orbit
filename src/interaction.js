@@ -8,6 +8,9 @@ const tooltip = document.getElementById('tooltip');
 const tooltipName = document.getElementById('tooltip-name');
 const tooltipSize = document.getElementById('tooltip-size');
 const tooltipDistance = document.getElementById('tooltip-distance');
+const dom = {
+    planetPanel: document.getElementById('planet-panel'),
+}
 
 // Raycasting
 const raycaster = new THREE.Raycaster();
@@ -79,8 +82,7 @@ export function drawPlanetLine(planet, camera) {
     if (vector.z > 1) return; // planet behind camera
     const px = (vector.x * 0.5 + 0.5) * window.innerWidth;
     const py = (-vector.y * 0.5 + 0.5) * window.innerHeight;
-    const panel = document.getElementById('planet-panel');
-    const rect = panel.getBoundingClientRect();
+    const rect = dom.planetPanel.getBoundingClientRect();
     const panelX = rect.right;
     const panelY = rect.top + rect.height / 2;
     lineCtx.beginPath();
