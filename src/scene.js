@@ -60,7 +60,7 @@ function createStarfield(count) {
 }
 
 function createSunPointLight() {
-    const sunPointLight = new THREE.PointLight(0xca3e09, 1, 0, 0.1);
+    const sunPointLight = new THREE.PointLight(0xca3e09, 1, 100, 0.1);
     sunPointLight.position.set(0, 0, 0);
     sunPointLight.power = 100;
     return sunPointLight;

@@ -101,14 +101,14 @@ export function startFocus(planet) {
     focusTarget = planet;
 }
 
+const _offset = new THREE.Vector3();
 export function updateFocus(controls) {
     if (!focusTarget) return;
     const targetPos = focusTarget.mesh.position;
 
-    const offset = new THREE.Vector3();
-    offset.subVectors(camera.position, controls.target);
+    _offset.subVectors(camera.position, controls.target);
 
-    const desiredPos = targetPos.clone().add(offset);
+    const desiredPos = targetPos.clone().add(_offset);
     camera.position.lerp(desiredPos, 0.05);
     controls.target.lerp(targetPos, 0.05);
     controls.update();
