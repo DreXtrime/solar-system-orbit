@@ -183,7 +183,7 @@ label {
 }
 
 button {
-    background: transparent;
+    background: var(--accent-dim);
     border: 1px solid var(--accent-border);
     color: var(--text);
     font-family: 'Share Tech Mono', monospace;
@@ -489,4 +489,12 @@ input[type='color'] {
 #info-panel.visible {
     opacity: 1;
     pointer-events: all;
+}
+
+#btn-close-info {
+    position: absolute;
+    padding: 10px 14px;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
 }
