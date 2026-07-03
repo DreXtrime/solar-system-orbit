@@ -3,12 +3,13 @@ on:
   push:
     branches:
       - main
+      - beta
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout to main
+      - name: Checkout
         uses: actions/checkout@main
 
       - name: Set up Node
@@ -33,8 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: production
-      url: https://orbit.tanelneitov.EU
+      name: ${{ github.ref_name == 'main' && 'production' || 'beta' }}
+      url: ${{ github.ref_name == 'main' && 'https://orbit.tanelneitov.eu' || 'https://beta-orbit.tanelneitov.eu' }}
     steps:
       - name: Download built files
         uses: actions/download-artifact@v4
@@ -48,7 +49,16 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.HOST_SERVER_IP }} >> ~/.ssh/known_hosts
-
+          
+      - name: Set deploy path
+        id: vars
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "path=~/domeenid/www.tanelneitov.eu/orbit/" >> "$GITHUB_OUTPUT"
+          else
+            echo "path=~/domeenid/www.tanelneitov.eu/beta-orbit/" >> "$GITHUB_OUTPUT"
+          fi
+          
       - name: Deploy built site
         run: |
-          rsync -vrm ./dist/ ${{ secrets.SSH_LOGIN_CREDS }}:~/domeenid/www.tanelneitov.eu/orbit/
+          rsync -vrm ./dist/ ${{ secrets.SSH_LOGIN_CREDS }}:${{ steps.vars.outputs.path }}
